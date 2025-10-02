@@ -74,45 +74,45 @@ export default function ShopPage() {
 
   // Fetch products with filters
   const fetchProducts = async () => {
-    setLoading(true);
-    setError('');
+  setLoading(true);
+  setError('');
+  
+  try {
+    const params = new URLSearchParams({
+      page: currentPage.toString(),
+      ordering: sortBy,
+    });
     
-    try {
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        ordering: sortBy,
-      });
+    if (searchQuery) params.append('search', searchQuery);
+    if (selectedCategory) params.append('category', selectedCategory);
+    if (selectedBrand) params.append('brand', selectedBrand);
+    if (priceRange.min) params.append('min_price', priceRange.min);
+    if (priceRange.max) params.append('max_price', priceRange.max);
+    
+    // FIXED: Changed from / to ? before params
+    const response = await fetch(`${API_BASE_URL}/api/products/products?${params}`);
+    
+    if (response.ok) {
+      const data = await response.json();
+      setProducts(data.results || []);
+      setTotalPages(Math.ceil((data.count || 0) / 12));
+      setTotalProducts(data.count || 0);
       
-      if (searchQuery) params.append('search', searchQuery);
-      if (selectedCategory) params.append('category', selectedCategory);
-      if (selectedBrand) params.append('brand', selectedBrand);
-      if (priceRange.min) params.append('min_price', priceRange.min);
-      if (priceRange.max) params.append('max_price', priceRange.max);
-      
-      const response = await fetch(`${API_BASE_URL}/api/products/products/${params}`);
-      
-      if (response.ok) {
-        const data = await response.json();
-        setProducts(data.results || []);
-        setTotalPages(Math.ceil((data.count || 0) / 12));
-        setTotalProducts(data.count || 0);
-        
-        // Set filter options if available
-        if (data.filters) {
-          setCategories(data.filters.categories || []);
-          setBrands(data.filters.brands || []);
-        }
-      } else {
-        setError('Failed to fetch products');
+      // Set filter options if available
+      if (data.filters) {
+        setCategories(data.filters.categories || []);
+        setBrands(data.filters.brands || []);
       }
-    } catch (err) {
-      console.error('Error fetching products:', err);
-      setError('Network error. Please check your connection.');
-    } finally {
-      setLoading(false);
+    } else {
+      setError('Failed to fetch products');
     }
-  };
-
+  } catch (err) {
+    console.error('Error fetching products:', err);
+    setError('Network error. Please check your connection.');
+  } finally {
+    setLoading(false);
+  }
+};
   // Fetch filter options
   const fetchFiltersData = async () => {
     try {
