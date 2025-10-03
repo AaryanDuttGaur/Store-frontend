@@ -97,7 +97,8 @@ export default function OrderDetailPage() {
     const token = localStorage.getItem("access_token");
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/orders/cancel/${orderId}/`, {
+             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/cancel/${orderId}/`,{
+ 
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -128,7 +129,7 @@ export default function OrderDetailPage() {
     const token = localStorage.getItem("access_token");
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/orders/reorder/${orderId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/reorder/${orderId}/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -163,7 +164,7 @@ export default function OrderDetailPage() {
     const token = localStorage.getItem("access_token");
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/orders/invoice/${orderId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/invoice/${orderId}/`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',

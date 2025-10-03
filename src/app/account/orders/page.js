@@ -67,8 +67,9 @@ export default function OrdersListPage() {
         )
       });
 
-      const response = await fetch(`http://127.0.0.1:8000/api/orders/list/?${params}`, {
-        headers: {
+      // const response = await fetch(`http://127.0.0.1:8000/api/orders/list/?${params}`, {
+       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/list/?${params}`,{
+      headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
