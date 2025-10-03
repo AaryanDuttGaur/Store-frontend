@@ -71,7 +71,7 @@ export default function ProfilePage() {
     try {
       const accessToken = localStorage.getItem("access_token");
       
-      const response = await fetch(`http://127.0.0.1:8000/api/account/profile/`, {
+     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/account/profile/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -179,7 +179,7 @@ export default function ProfilePage() {
       try {
         const accessToken = localStorage.getItem("access_token");
         
-        const response = await fetch(`http://127.0.0.1:8000/api/account/profile/`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/account/profile/`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
