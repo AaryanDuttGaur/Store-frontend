@@ -49,7 +49,8 @@ export default function CartPage() {
     try {
       const accessToken = localStorage.getItem("access_token");
 
-      const response = await fetch("http://127.0.0.1:8000/api/cart/", {
+      // const response = await fetch("http://127.0.0.1:8000/api/cart/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +94,8 @@ export default function CartPage() {
     try {
       const accessToken = localStorage.getItem("access_token");
 
-      const response = await fetch(`http://127.0.0.1:8000/api/cart/items/${itemId}/`, {
+      // const response = await fetch(`http://127.0.0.1:8000/api/cart/items/${itemId}/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/items/${itemId}/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -142,7 +144,9 @@ export default function CartPage() {
     try {
       const accessToken = localStorage.getItem("access_token");
 
-      const response = await fetch(`http://127.0.0.1:8000/api/cart/items/${itemId}/remove/`, {
+      // const response = await fetch(`http://127.0.0.1:8000/api/cart/items/${itemId}/remove/`, {
+      
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/items/${itemId}/remove/`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${accessToken}`,
@@ -185,7 +189,8 @@ export default function CartPage() {
     try {
       const accessToken = localStorage.getItem("access_token");
 
-      const response = await fetch("http://127.0.0.1:8000/api/cart/clear/", {
+      // const response = await fetch("http://127.0.0.1:8000/api/cart/clear/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/clear/`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${accessToken}`,
