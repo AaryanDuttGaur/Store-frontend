@@ -43,15 +43,24 @@ export default function OrderDetailPage() {
     invoice: false
   });
 
-  useEffect(() => {
-     console.log('Params object:', params);
-    const accessToken = localStorage.getItem("access_token");
-    if (!accessToken) {
-      router.push('/auth/login');
-      return;
-    }
+  // Get API URL with fallback
+  const getApiUrl = () => {
+    return process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+  };
 
-    fetchOrderDetail(accessToken);
+  useEffect(() => {
+    console.log('Params object:', params);
+    console.log('API URL:', getApiUrl());
+    
+    // Check if we're on the client side before accessing localStorage
+    if (typeof window !== 'undefined') {
+      const accessToken = localStorage.getItem("access_token");
+      if (!accessToken) {
+        router.push('/auth/login');
+        return;
+      }
+      fetchOrderDetail(accessToken);
+    }
   }, [orderId, router]);
 
   const fetchOrderDetail = async (token) => {
@@ -59,7 +68,8 @@ export default function OrderDetailPage() {
     setError(null);
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/orders/detail/${orderId}/`, {
+      const apiUrl = getApiUrl();
+      const response = await fetch(`${apiUrl}/api/orders/detail/${orderId}/`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -72,8 +82,10 @@ export default function OrderDetailPage() {
         console.log('Order ID from params:', orderId);
         setOrder(data.order);
       } else if (response.status === 401) {
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("user_data");
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("user_data");
+        }
         router.push('/auth/login');
       } else if (response.status === 404) {
         setError('Order not found');
@@ -94,11 +106,13 @@ export default function OrderDetailPage() {
     if (!confirm('Are you sure you want to cancel this order?')) return;
 
     setActionLoading(prev => ({ ...prev, cancel: true }));
+    
+    if (typeof window === 'undefined') return;
     const token = localStorage.getItem("access_token");
 
     try {
-             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/cancel/${orderId}/`,{
- 
+      const apiUrl = getApiUrl();
+      const response = await fetch(`${apiUrl}/api/orders/cancel/${orderId}/`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -126,10 +140,13 @@ export default function OrderDetailPage() {
   // Handle reorder
   const handleReorder = async () => {
     setActionLoading(prev => ({ ...prev, reorder: true }));
+    
+    if (typeof window === 'undefined') return;
     const token = localStorage.getItem("access_token");
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/reorder/${orderId}/`, {
+      const apiUrl = getApiUrl();
+      const response = await fetch(`${apiUrl}/api/orders/reorder/${orderId}/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -161,10 +178,13 @@ export default function OrderDetailPage() {
   // Handle invoice download
   const handleDownloadInvoice = async () => {
     setActionLoading(prev => ({ ...prev, invoice: true }));
+    
+    if (typeof window === 'undefined') return;
     const token = localStorage.getItem("access_token");
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/invoice/${orderId}/`, {
+      const apiUrl = getApiUrl();
+      const response = await fetch(`${apiUrl}/api/orders/invoice/${orderId}/`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
