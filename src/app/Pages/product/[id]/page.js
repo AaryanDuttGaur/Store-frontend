@@ -63,8 +63,7 @@ export default function ProductPage() {
     setError('');
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/products/products/${productId}/`);
-
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/products/${productId}/`);
       if (response.ok) {
         const data = await response.json();
         setProduct(data);
@@ -101,7 +100,7 @@ export default function ProductPage() {
     setAddingToCart(true);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/cart/add/', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/add/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
