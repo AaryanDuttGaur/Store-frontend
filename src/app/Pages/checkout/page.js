@@ -141,7 +141,8 @@ function CheckoutContent() {
   const loadSingleProduct = async (id) => {
     setLoading(true);
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/products/products/${id}/`);
+      // const response = await fetch(`http://127.0.0.1:8000/api/products/products/${id}/`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/products/${id}/`);
       if (response.ok) {
         const product = await response.json();
         const item = {
@@ -172,8 +173,10 @@ function CheckoutContent() {
     setLoading(true);
     try {
       const accessToken = localStorage.getItem("access_token");
-      const response = await fetch('http://127.0.0.1:8000/api/cart/', {
-        headers: {
+      // const response = await fetch('http://127.0.0.1:8000/api/cart/', {
+      //  
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/`,{
+      headers: {
           'Authorization': `Bearer ${accessToken}`,
         },
       });
@@ -213,7 +216,9 @@ function CheckoutContent() {
   const fetchProfileData = async (userData) => {
     try {
       const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`http://127.0.0.1:8000/api/account/profile/`, {
+      // const response = await fetch(`http://127.0.0.1:8000/api/account/profile/`, {
+      
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/account/profile/`,{
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -362,7 +367,9 @@ function CheckoutContent() {
 
       console.log('Sending order data:', orderData);
 
-      const response = await fetch('http://127.0.0.1:8000/api/orders/create/', {
+      // const response = await fetch('http://127.0.0.1:8000/api/orders/create/', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/create/`, {
+
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -377,7 +384,9 @@ function CheckoutContent() {
       if (response.ok && responseData.success) {
         if (!productId) {
           try {
-            await fetch('http://127.0.0.1:8000/api/cart/clear/', {
+            // await fetch('http://127.0.0.1:8000/api/cart/clear/', {
+               await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/clear/`, {
+
               method: 'DELETE',
               headers: { 'Authorization': `Bearer ${accessToken}` },
             });
